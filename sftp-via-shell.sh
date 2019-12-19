@@ -12,6 +12,7 @@
 
 #	Histórico de Versão
 #	1.0 - criação do script em 19 de Dezembro de 2019;
+#	1.1 - algumas alterações estéticas e funcionais;
 
 #	---------------------------------
 #
@@ -40,6 +41,7 @@ export SENHA="aquelaMesmo"
 
 #	Defina o servidor a se conectar, número de tentativas
 #	de conexão e qual o tempo limite de espera do servidor.
+#	Tempo limite em SEGUNDOS.
 export SERVIDOR="exemplo.servidor.com"
 export TENTATIVAS=3
 export TEMPOLIMITE=60
@@ -48,7 +50,7 @@ export TEMPOLIMITE=60
 #	Caso sejam vários arquivos, escreva eles separados por
 #	um espaço. É possível usar wildcards aqui.
 #	Caso seja uma pasta inteira, COMENTE a linha abaixo e
-#	DESCOMENTE a linha seguinte e digite o nome da PASTA.
+#	DESCOMENTE a linha seguinte; digite o nome da PASTA.
 export ARQUIVO=""
 # export PASTA=""
 
@@ -59,19 +61,24 @@ export ARQUIVO=""
 export PASTALOCAL=/home/zedasgraca
 export PASTAREMOTA=/envios
 
+#	Essa variável define como o sftp irá se comportar.
+#	Edite somente se novas configurações forem necessárias.
+
+export OPCOES='-oConnectionAttempts=$TENTATIVAS -oConnectTimeout=$TEMPOLIMITE'
+
 #	---------------------------------
 
 cd $PASTALOCAL 							; # muda para a pasta onde o arquivo se encontra
-
 expect << EOS							; # executa o processo via EXPECT
 
-spawn sftp $::env(USUARIO)@$::env(SERVIDOR)			; # roda o processo do SFTP dentro do expect
+spawn sftp $::env(OPCOES) $::env(USUARIO)@$::env(SERVIDOR)	; # roda o processo do SFTP dentro do expect
 expect "$::env(USUARIO)@$::env(SERVIDOR)'s password: "		; # aguarda pedir senha
 send $SENHA\r							; # fornece a senha
 expect "sftp>"							; # aguarda o prompt sftp
 send -- "cd $PASTAREMOTA\n"					; # muda para a pasta onde botar o arquivo
 expect "sftp>"							; # aguarda voltar ao prompt
-send -- "put $ARQUIVO\n"					; # faz o envio do arquivo
+
+send -- "put $ARQUIVO\n"					; # faz o envio do arquivo. Comente se for pasta.
 
 # send -- "mkdir $PASTA						; # No caso de fazer o upload de uma pasta toda
 # expect "sftp>"						; # comente a o send acima e descomente esse bloco
