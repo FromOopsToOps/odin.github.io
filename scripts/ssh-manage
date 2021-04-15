@@ -1,0 +1,43 @@
+#!/bin/bash
+
+help()
+{
+printf "\nUsage: ssh-manage [OPTION]"
+printf "\nUse this tool to manage servers on your ~/.ssh/config file."
+printf "\n\nBasic usage:"
+printf "\n  -a,  --add\t\tAdds a new server into your configuration file."
+printf "\n  -d,  --del\t\tDeletes a server from your configuration file."
+printf "\n  -h,  --help\t\tPrints this help."
+printf "\n"
+}
+
+addServer()
+{
+printf "\nAdding a new server to config file\n"
+read -p "Server Name: " ServerName
+read -p "Server IP: " ServerIpRaw
+read -p "User: " UserRaw
+HostName=$(echo $ServerIpRaw |tr ',' '.')
+User=$(echo $UserRaw |tr '[:upper:]' '[:lower:]')
+
+printf "\n#$ServerName" >> ~/.ssh/config
+printf "\nHost\t$ServerName\n\tHostName\t$HostName\n\tUser\t$User" >> ~/.ssh/config
+printf "\n#$ServerName\n" >> ~/.ssh/config
+}
+
+delServer()
+{
+printf "\nDeleting a server from config file\n"
+read -p "Server Name: " ServerName
+
+sed -i "/^#$ServerName/,/^\$ServerName$/d;" .ssh/config
+sed -i '$d' .ssh/config
+}
+
+opt=$1
+case $opt
+in
+    -a) addServer ;;
+    -d) delServer ;;
+    -h) help ;;
+esac
