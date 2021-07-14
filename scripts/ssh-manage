@@ -23,6 +23,12 @@ User=$(echo $UserRaw |tr '[:upper:]' '[:lower:]')
 printf "\n#$ServerName" >> ~/.ssh/config
 printf "\nHost\t$ServerName\n\tHostName\t$HostName\n\tUser\t$User" >> ~/.ssh/config
 printf "\n#$ServerName\n" >> ~/.ssh/config
+
+printf "\nSummary:\n"
+printf "\n#$ServerName"
+printf "\nHost\t$ServerName\n\tHostName\t$HostName\n\tUser\t$User"
+printf "\n#$ServerName\n"
+printf "\nServer added successfully\n"
 }
 
 delServer()
@@ -30,14 +36,18 @@ delServer()
 printf "\nDeleting a server from config file\n"
 read -p "Server Name: " ServerName
 
-sed -i "/^#$ServerName/,/^\$ServerName$/d;" .ssh/config
-sed -i '$d' .ssh/config
+sed -i "/^\<#$ServerName\>/,/^\<#$ServerName\>/d;" ~/.ssh/config
+sed -i '$d' ~/.ssh/config
+
+printf "\nDeleted $ServerName from configuration file."
+printf "\n"
 }
 
 opt=$1
 case $opt
 in
     -a) addServer ;;
+    -c) count ;;
     -d) delServer ;;
     -h) help ;;
 esac

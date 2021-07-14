@@ -2,8 +2,8 @@
 
 # set variables here!
 WALLPAPER_FOLDER="$HOME/Imagens/Wallpapers"
-16-9="Desktop-FullHD"
-4-3="Desktop-TV"
+res16_9="Desktop-FullHD"
+res4_3="Desktop-TV"
 mobile="Mobile"
 square="Desktop-Square"
 wide="Desktop-Wide"
@@ -28,23 +28,23 @@ while IFS= read -r line; do
 
 	case $RATIO in
 		1.77778)
-			mv "$line" "$WALLPAPER_FOLDER"/"$16-9"
+			mv "$line" "$WALLPAPER_FOLDER"/$res16_9
 			;;
 		1.33333)
-			mv "$line" "$WALLPAPER_FOLDER"/"$4-3"
+			mv "$line" "$WALLPAPER_FOLDER"/$res4_3
 			;;
 		0.5625)
-			mv "$line" "$WALLPAPER_FOLDER"/"$mobile"
+			mv "$line" "$WALLPAPER_FOLDER"/$mobile
 			;;
 		1)
-			mv "$line" "$WALLPAPER_FOLDER"/"$square"
+			mv "$line" "$WALLPAPER_FOLDER"/$square
 			;;
 		*)
 			if [ $RATIO -gt 1 ]
 			then
-				mv "$line" "$WALLPAPER_FOLDER"/"$wide"
+				mv "$line" "$WALLPAPER_FOLDER"/$wide
 			else
-				mv "$line" "$WALLPAPER_FOLDER"/"$nonwide"
+				mv "$line" "$WALLPAPER_FOLDER"/$nonwide
 			fi
 			;;
 	esac
